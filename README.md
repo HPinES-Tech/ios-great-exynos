@@ -1,5 +1,6 @@
 # PROJECT STILL IN WORK !
 ***Project is now unusable, wait until this text is removed.***
+***Please do not follow the readme below until this text is removed.***
 
 # ios-great-exynos
 
