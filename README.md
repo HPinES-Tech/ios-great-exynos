@@ -19,7 +19,7 @@ As of **right now** the phone boots to the **iOS home screen**. You can unlock i
 
 | Area | State |
 | --- | --- |
-| Boot | Custom Recovery → flash boot.img (our shim) to boot partition → XNU. A custom boot image is flashed to the boot partition, you do not need to flash it again on the next boot time |
+| Boot | Custom Recovery → flash shim-boot.img image (our shim) to boot partition → Reboot -> XNU. A custom boot image is flashed to the boot partition, only for the first time |
 | CPU | 8 of the 8 cores (the four Exynos M2s and four Cortex-A53s) via PSCI, 16K pages, GICv3 interrupts, timers |
 | Memory | About 3.95 GiB of the upper DDR bank |
 | Storage | Own UFS host driver; the iOS root is a journaled HFS+ volume in `userdata`, read/write |
@@ -36,7 +36,7 @@ As of **right now** the phone boots to the **iOS home screen**. You can unlock i
 
 - **Navigation:** you cannot leave an app (the home gesture and AssistiveTouch Home do nothing yet).
 - **No Wi-Fi, Bluetooth, cellular, audio, camera, sensors, GPS or SEP / Face ID.** Daemons for them start and fail or keep relaunching.
-- **No GPU.** Everything is drawn by the CPU at roughly 20–30 fps. The two Cortex-A76 cores are not used yet.
+- **No GPU.** Everything is drawn by the CPU at roughly 20–30 fps. The four Cortex-A53 cores and four Exynos M2 cores are not used yet.
 - **Few apps.** The image has only what is on the system volume. There is no App Store, no Apple ID, and some Settings pages are empty.
 - **Slow boot:** about 4 minutes on the Apple logo.
 - **Security is off:** permissive code signing (AMFI) and sandbox policies, a stub AppleKeyStore, no data protection. Do not put anything personal on it.
@@ -44,19 +44,19 @@ As of **right now** the phone boots to the **iOS home screen**. You can unlock i
 ## How it boots
 
 ```
-ABL (stock Xiaomi bootloader, unlocked)
-  -> fastboot boot shim-boot.img              (temporary; nothing is flashed to boot)
+Bootloader (stock Samsung bootloader, OEM unlocked)
+  -> flash shim-boot.img to boot partition using custom recovery (the boot image is flashed to boot partition, only for the first time), then reboot.
      -> shim: own MMU setup, reads the live FDT, loads the payload from the ramdisk
         -> XNU Mach-O + generated Apple Device Tree (ADT) + boot-args
            -> XNU -> UFS driver -> HFS+ root in the userdata partition
               -> dyld + shared cache -> launchd -> daemons -> backboardd + SpringBoard
 ```
 
-There is no serial port (the debug UART is wired as SPI on this board). The kernel draws its console into the framebuffer that ABL leaves at `0x9c000000`, and keeps a persistent 4 MiB log ring at the end of `userdata`. You read that log from OrangeFox recovery with `tools/sweet-log-pull.sh`, so you don't have to film the screen.
+There is no confirmed serial-console configuration yet. The kernel draws its console into the framebuffer provided by the Samsung bootloader, and keeps a persistent 4 MiB log ring at the end of userdata. You read that log from recovery, so you don’t have to film the screen.
 
 ## How to do it yourself
 
-You need a Redmi Note 10 Pro (`sweet`, global or Indian variant, SM7150) with an **unlocked bootloader**, a Linux PC, and a GitHub account for the kernel build. This is the exact path used for the screenshots above; other variants or firmware may need changes. **Everything on `userdata` is lost.** Bootloaders, recovery, modem and persist partitions are never touched.
+You need a Samsung Galaxy Note8 (`greatlte`, SM-N950F/FD/N `Exynos Processor`, S5E8895) with an **unlocked bootloader**, a Linux PC, and a GitHub account for the kernel build. This is the exact path used for the screenshots above; other variants or firmware may need changes. **Everything on `userdata` is lost.** Bootloaders, recovery, modem and persist partitions are never touched.
 
 ### 0. Back up the phone
 
