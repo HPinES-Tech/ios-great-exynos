@@ -1,5 +1,6 @@
 # PROJECT STILL IN WORK !
-***Project is now unusable, wait until this text is removed.***
+***Project is now unusable until this text is removed.***
+
 ***Please do not follow the readme below until this text is removed.***
 
 # ios-great-exynos
@@ -18,14 +19,14 @@ As of **right now** the phone boots to the **iOS home screen**. You can unlock i
 
 | Area | State |
 | --- | --- |
-| Boot | Custom Recovery → flash boot.img (our shim) to boot partition → XNU. A custom boot image is flashed to the boot partitions |
-| CPU | 6 of the 8 cores (the six Cortex-A55s) via PSCI, 16K pages, GICv3 interrupts, timers |
+| Boot | Custom Recovery → flash boot.img (our shim) to boot partition → XNU. A custom boot image is flashed to the boot partition, you do not need to flash it again on the next boot time |
+| CPU | 8 of the 8 cores (the four Exynos M2s and four Cortex-A53s) via PSCI, 16K pages, GICv3 interrupts, timers |
 | Memory | About 3.95 GiB of the upper DDR bank |
 | Storage | Own UFS host driver; the iOS root is a journaled HFS+ volume in `userdata`, read/write |
 | iOS userland | Real iPhone X 16.7.16 root filesystem and shared cache; launchd and the system daemons run |
 | Display | Kernel IOSurface + IOMobileFramebuffer (`AppleCLCD`) services; CoreAnimation renders in software; frames are copied into the bootloader's framebuffer. Presented to iOS as an iPhone X panel (1125×2436) |
 | GUI | backboardd, SpringBoard, lock screen, home screen, Control Center, notification center, Settings |
-| Touch | Goodix GT9896 over I²C (GENI), rail enabled through RPMh, delivered as HID digitizer events |
+| Touch | Samsung S6SY661 over I²C (HSI2C), rail enabled through RPMh, delivered as HID digitizer events |
 | Buttons | Power, volume up/down (PMIC through SPMI) as HID consumer keys; lock/wake works |
 | Battery | IOPMPowerSource service (static 100 %, charging icon; real fuel-gauge readout prepared) |
 | Device identity | iPhone X (`iPhone10,3` / `D22AP`): no Home button, gesture UI |
