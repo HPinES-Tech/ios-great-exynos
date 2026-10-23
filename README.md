@@ -5,6 +5,8 @@
 
 **Apple's iOS 16 running on a Samsung Galaxy Note8.**
 
+`Fork of dipa-studio/ios-sweet`
+
 This project ports Apple's open-source XNU kernel (xnu-8796, the iOS 16 generation) to the Samsung Galaxy Note8 (`greatlte`, Samsung S5E8895 / Exynos 8895). On top of it runs the **unmodified iOS 16.7.16 (20H392) userland of the iPhone X**: launchd, the system daemons, backboardd, SpringBoard and the stock apps.
 
 As of **right now** the phone boots to the **iOS home screen**. You can unlock it, open Settings, pull down Control Center and the notification center, and use the touchscreen and the hardware buttons. Rendering runs entirely on the CPU; there is no GPU driver.
