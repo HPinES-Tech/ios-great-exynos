@@ -19,7 +19,7 @@ As of **right now** the phone boots to the **iOS home screen**. You can unlock i
 
 | Area | State |
 | --- | --- |
-| Boot | Custom Recovery → flash shim-boot.img image (our shim) to boot partition → Reboot -> XNU. A custom boot image is flashed to the boot partition, only for the first time |
+| Boot | Flashed Shim Image -> XNU. A custom boot image is flashed to the boot partition |
 | CPU | 8 of the 8 cores (the four Exynos M2s and four Cortex-A53s) via PSCI, 16K pages, GICv3 interrupts, timers |
 | Memory | About 3.95 GiB of the upper DDR bank |
 | Storage | Own UFS host driver; the iOS root is a journaled HFS+ volume in `userdata`, read/write |
@@ -45,7 +45,7 @@ As of **right now** the phone boots to the **iOS home screen**. You can unlock i
 
 ```
 Bootloader (stock Samsung bootloader, OEM unlocked)
-  -> flash shim-boot.img to boot partition using custom recovery (the boot image is flashed to boot partition, only for the first time), then reboot.
+  -> Flashed Shim Image
      -> shim: own MMU setup, reads the live FDT, loads the payload from the ramdisk
         -> XNU Mach-O + generated Apple Device Tree (ADT) + boot-args
            -> XNU -> UFS driver -> HFS+ root in the userdata partition
