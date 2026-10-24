@@ -1,4 +1,4 @@
-# PROJECT STILL IN WORK !
+# PROJECT IN DEVELOPMENT !
 ***Project is now unusable until this text is removed.***
 
 ***Please do not follow the readme below until this text is removed.***
