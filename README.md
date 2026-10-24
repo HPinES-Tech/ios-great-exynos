@@ -24,7 +24,7 @@ As of **right now** the phone boots to the **iOS home screen**. You can unlock i
 | Memory | About 3.95 GiB of the upper DDR bank |
 | Storage | Own UFS host driver; the iOS root is a journaled HFS+ volume in `userdata`, read/write |
 | iOS userland | Real iPhone X 16.7.16 root filesystem and shared cache; launchd and the system daemons run |
-| Display | Kernel IOSurface + IOMobileFramebuffer (`AppleCLCD`) services; CoreAnimation renders in software; frames are copied into the bootloader's framebuffer. Presented to iOS as an iPhone X panel (1125×2436) |
+| Display | Kernel IOSurface + IOMobileFramebuffer (`AppleCLCD`) services; CoreAnimation renders in software; frames are copied into the bootloader's framebuffer. Presented to iOS as an iPhone X panel (1125×2436 canvas scaled on the 1440×2960 panel) |
 | GUI | backboardd, SpringBoard, lock screen, home screen, Control Center, notification center, Settings |
 | Touch | Samsung S6SY661 over I²C (HSI2C), rail enabled through RPMh, delivered as HID digitizer events |
 | Buttons | Power, volume up/down (PMIC through SPMI) as HID consumer keys; lock/wake works |
