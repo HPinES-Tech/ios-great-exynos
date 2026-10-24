@@ -20,7 +20,7 @@ As of **right now** the phone boots to the **iOS home screen**. You can unlock i
 | Area | State |
 | --- | --- |
 | Boot | Flashed Shim Image -> XNU. A custom boot image is flashed to the boot partition |
-| CPU | 8 of the 8 cores (the four Exynos M2s and four Cortex-A53s) via PSCI, 16K pages, GICv3 interrupts, timers |
+| CPU | 4 of the 8 cores (the four Exynos M2s) via PSCI, 16K pages, GICv3 interrupts, timers |
 | Memory | About 3.95 GiB of the upper DDR bank |
 | Storage | Own UFS host driver; the iOS root is a journaled HFS+ volume in `userdata`, read/write |
 | iOS userland | Real iPhone X 16.7.16 root filesystem and shared cache; launchd and the system daemons run |
@@ -36,7 +36,7 @@ As of **right now** the phone boots to the **iOS home screen**. You can unlock i
 
 - **Navigation:** you cannot leave an app (the home gesture and AssistiveTouch Home do nothing yet).
 - **No Wi-Fi, Bluetooth, cellular, audio, camera, sensors, GPS or SEP / Face ID.** Daemons for them start and fail or keep relaunching.
-- **No GPU.** Everything is drawn by the CPU at roughly 20–30 fps. The four Cortex-A53 cores and four Exynos M2 cores are not used yet.
+- **No GPU.** Everything is drawn by the CPU at roughly 20–30 fps. The four Cortex-A53 cores are not used yet.
 - **Few apps.** The image has only what is on the system volume. There is no App Store, no Apple ID, and some Settings pages are empty.
 - **Slow boot:** about 4 minutes on the Apple logo.
 - **Security is off:** permissive code signing (AMFI) and sandbox policies, a stub AppleKeyStore, no data protection. Do not put anything personal on it.
