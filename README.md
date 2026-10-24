@@ -56,7 +56,7 @@ There is no confirmed serial-console configuration yet. The kernel draws its con
 
 ## How to do it yourself
 
-You need a Samsung Galaxy Note8 (`greatlte`, SM-N950F/FD/N `Exynos Processor`, S5E8895) with an **unlocked bootloader**, a Linux PC, and a GitHub account for the kernel build. This is the exact path used for the screenshots above; other variants or firmware may need changes. **Everything on `userdata` is lost.** Bootloaders, recovery, modem and persist partitions are never touched.
+You need a Samsung Galaxy Note8 (`greatlte` `SM-N950F/FD/N` `Exynos Processor`, S5E8895) with an **unlocked bootloader**, a Linux PC, and a GitHub account for the kernel build. This is the exact path used for the screenshots above; other variants or firmware may need changes. **Everything on `userdata` is lost.** Bootloaders, recovery, modem and persist partitions are never touched.
 
 ### 0. Back up the phone
 
