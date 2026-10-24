@@ -60,7 +60,7 @@ You need a Samsung Galaxy Note8 (`greatlte`, `SM-N950F/FD/N`, S5E8895) with **OE
 
 ### 0. Back up the phone
 
-Boot OrangeFox (or any recovery with adb root) temporarily and pull at least `persist`, `modemst1`, `modemst2`, `fsg`, `fsc` and `boot`, `dtbo`, `vbmeta`. They contain per-device calibration data. Keep them off git; `.gitignore` already excludes `backup/`, `dtb/` and `recovery/`.
+Flash TWRP (or any recovery with adb root) via odin, then boot and pull at least `boot`. That contain the device kernel (or just export `boot.img` from the `phone's AP firmware` and place in `backup/` if you want to skip it). Keep them off git; `.gitignore` already excludes `backup/`, `dtb/` and `recovery/`.
 
 The shim needs the stock DTB. Unpack your phone's stock `boot.img`:
 
