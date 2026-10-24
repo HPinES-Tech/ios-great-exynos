@@ -44,7 +44,7 @@ As of **right now** the phone boots to the **iOS home screen**. You can unlock i
 ## How it boots
 
 ```
-Bootloader (stock Samsung bootloader, OEM unlocked)
+SBOOT (stock Samsung bootloader, OEM unlocked)
   -> Flashed Shim Image
      -> shim: own MMU setup, reads the live FDT, loads the payload from the ramdisk
         -> XNU Mach-O + generated Apple Device Tree (ADT) + boot-args
