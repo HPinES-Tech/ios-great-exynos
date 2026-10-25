@@ -134,7 +134,7 @@ What the less obvious boot-args do:
 4. Select `Install` -> `Install Image` -> `/path/to/shim-boot.img` -> `Boot` -> `Swipe to Flash`
 5. After flash, reboot the device
 
-The first boot takes about 4–5 minutes on the Apple logo, then the lock screen appears. Swipe up to unlock. To get back to custom recovery, hold Power + Volume down + Bixby.
+The first boot takes about 4–5 minutes on the Apple logo, then the lock screen appears. Swipe up to unlock. To get back to custom recovery, hold Power + Volume up + Bixby.
 
 ### 5. Read the kernel log
 
