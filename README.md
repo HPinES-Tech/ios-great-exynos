@@ -125,18 +125,16 @@ What the less obvious boot-args do:
 | `great_exynos_fb_hz=30` | Panel refresh rate of the CPU copy |
 | `great_exynos_touch=0`, `great_exynos_keys=0` | Disable the touch or button driver |
 
-### 4. Flash the root and bootôt
+### 4. Flash the root and boot
 
 1. Boot into TWRP (or any custom recovery with adb root)
-2. Select `Install` -> `Install Image` -> `
+2. Select `Install` -> `Install Image` -> `/path/to/ios16-root.simg` -> `Data` -> `Swipe to Flash`
+- ~7 minutes; do not unplug
+3. After flash, reboot back to recovery
+4. Select `Install` -> `Install Image` -> `/path/to/shim-boot.img` -> `Boot` -> `Swipe to Flash`
+5. After flash, reboot the device
 
-```sh
-fastboot -S 512M flash userdata ios16-root.simg   # ~7 minutes; do not unplug
-# Xiaomi's fastboot often hangs after a large flash: re-enter fastboot with Power + Volume down
-fastboot boot shim/out/shim-boot.img
-```
-
-The first boot takes about 4–5 minutes on the Apple logo, then the lock screen appears. Swipe up to unlock. To get back to fastboot, hold Power + Volume down.
+The first boot takes about 4–5 minutes on the Apple logo, then the lock screen appears. Swipe up to unlock. To get back to custom recovery, hold Power + Volume down + Bixby.
 
 ### 5. Read the kernel log
 
