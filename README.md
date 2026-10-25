@@ -20,14 +20,14 @@ As of **right now** the phone boots to the **iOS home screen**. You can unlock i
 | Area | State |
 | --- | --- |
 | Boot | Flashed Shim Image -> XNU. A custom boot image is flashed to the boot partition |
-| CPU | 4 of the 8 cores (the four Exynos M2s) via PSCI, 16K pages, GICv3 interrupts, timers |
+| CPU | 8 of the 8 cores (the four Exynos M2s and four Cortex-A53) via PSCI, 16K pages, GICv3 interrupts, timers |
 | Memory | About 3.95 GiB of the upper DDR bank |
 | Storage | Own UFS host driver; the iOS root is a journaled HFS+ volume in `userdata`, read/write |
 | iOS userland | Real iPhone X 16.7.16 root filesystem and shared cache; launchd and the system daemons run |
 | Display | Kernel IOSurface + IOMobileFramebuffer (`AppleCLCD`) services; CoreAnimation renders in software; frames are copied into the bootloader's framebuffer. Presented to iOS as an iPhone X panel (1125×2436 canvas scaled on the 1440×2960 panel) |
 | GUI | backboardd, SpringBoard, lock screen, home screen, Control Center, notification center, Settings |
-| Touch | Samsung S6SY661 over I²C (HSI2C), rail enabled through PMIC/regulator, delivered as HID digitizer events |
-| Buttons | Power, volume up/down (PMIC through SPMI) as HID consumer keys; lock/wake works |
+| Touch | Samsung S6SY661 over HSI2C (High-Speed I2C) of Exynos, rail enabled through PMIC/regulator, delivered as HID digitizer events |
+| Buttons | Power, volume up/down/Bixby via Exynos GPIOs and Samsung PMIC as HID consumer keys; lock/wake works |
 | Battery | IOPMPowerSource service (static 100 %, charging icon; real fuel-gauge readout prepared) |
 | Device identity | iPhone X (`iPhone10,3` / `D22AP`): no Home button, gesture UI |
 | Activation | Native "Hactivation" path of mobileactivationd, chosen through device-tree security status. No Apple servers involved |
@@ -36,7 +36,7 @@ As of **right now** the phone boots to the **iOS home screen**. You can unlock i
 
 - **Navigation:** you cannot leave an app (the home gesture and AssistiveTouch Home do nothing yet).
 - **No Wi-Fi, Bluetooth, cellular, audio, camera, sensors, GPS or SEP / Face ID.** Daemons for them start and fail or keep relaunching.
-- **No GPU.** Everything is drawn by the CPU at roughly 20–30 fps. The four Cortex-A53 cores are not used yet.
+- **No GPU.** Everything is drawn by the CPU at roughly <60 fps.
 - **Few apps.** The image has only what is on the system volume. There is no App Store, no Apple ID, and some Settings pages are empty.
 - **Slow boot:** about 4 minutes on the Apple logo.
 - **Security is off:** permissive code signing (AMFI) and sandbox policies, a stub AppleKeyStore, no data protection. Do not put anything personal on it.
@@ -60,7 +60,7 @@ You need a Samsung Galaxy Note8 (`greatlte`, `SM-N950F/FD/N`, S5E8895) with **OE
 
 ### 0. Back up the phone
 
-Flash TWRP (or any recovery with adb root) via odin, then boot and pull at least `boot`. That contain the device kernel (or just export `boot.img` from the `phone's AP firmware` and place in `backup/` if you want to skip it). Keep them off git; `.gitignore` already excludes `backup/`, `dtb/` and `recovery/`.
+Flash TWRP (or any recovery with adb root) via odin, then boot and pull at least `boot`. That contain the device kernel (or just extract `boot.img` from the `phone's AP firmware` if you want to skip it). Keep them off git; `.gitignore` already excludes `backup/`, `dtb/` and `recovery/`.
 
 The shim needs the stock DTB. Unpack your phone's stock `boot.img`:
 
@@ -73,8 +73,8 @@ python3 tools/unpack_bootv2.py backup/boot.img dtb/boot_unpacked   # -> dtb/boot
 The kernel builds on GitHub's macOS runners with [blacktop/darwin-xnu-build](https://github.com/blacktop/darwin-xnu-build). The workflow fetches xnu-8796, applies `xnu/patches/` in order, and also stages the pinned open-source libpthread, HFS and BearSSL sources it needs. Fork the repo (public repos get free macOS minutes) and run:
 
 ```sh
-gh workflow run xnu.yml -R YOU/ios-sweet
-gh run download RUN_ID -R YOU/ios-sweet -n xnu-kernel -D xnu/out
+gh workflow run xnu.yml -R YOU/ios-great-exynos
+gh run download RUN_ID -R YOU/ios-great-exynos -n xnu-kernel -D xnu/out
 ```
 
 To check a patch locally before spending a CI run, `tools/xnu-cc.py` replays the compile commands of a previous CI log for single files.
@@ -93,7 +93,7 @@ sudo umount /mnt/iosroot
 img2simg ios16-root.img ios16-root.simg
 ```
 
-`mkiosroot.sh` copies the OS volume and both cryptexes into one case-sensitive journaled HFS+ volume. It adds the dyld cache links, the plain system keybag and the log directories the daemons expect. `sweet-root-tweaks.py` applies the bring-up changes: it skips Setup, seeds the activation state, removes the baseband daemon, disables the watchdogs that kill slow apps and the crash-looping media paths, and so on. The script's header explains each change.
+`mkiosroot.sh` copies the OS volume and both cryptexes into one case-sensitive journaled HFS+ volume. It adds the dyld cache links, the plain system keybag and the log directories the daemons expect. `great-exynos-root-tweaks.py` applies the bring-up changes: it skips Setup, seeds the activation state, removes the baseband daemon, disables the watchdogs that kill slow apps and the crash-looping media paths, and so on. The script's header explains each change.
 
 The device tree builder copies `/product` from the real iPhone X device tree, which MobileGestalt needs. Extract it once, without downloading the whole IPSW:
 
@@ -107,9 +107,9 @@ ipsw img4 im4p extract research/ipsw-x/dt/Firmware/all_flash/DeviceTree.d22ap.im
 Needs `aarch64-linux-gnu-gcc` and `mkbootimg`.
 
 ```sh
-python3 tools/mkadt.py shim/out/sweet.adt --highmem
-python3 tools/mkpayload.py xnu/out/kernel.development.sweet shim/out/sweet.adt shim/out/payload.bin \
-    --cmdline 'debug=0xc serial=3 cpus=6 keepsyms=1 -enable_kprintf_spam -noprogress rd=ufsroot0 unentitled_ios_sim_launch=1 ignition_level=1 wdt_test=no_user_checkin ufsrw=1 rootrw=1 launchd_unsecure_cache=1 wdt=-1 sweetfb_noconsole=1 sweetfb_hz=30'
+python3 tools/mkadt.py shim/out/great-exynos.adt --highmem
+python3 tools/mkpayload.py xnu/out/kernel.development.great-exynos shim/out/great-exynos.adt shim/out/payload.bin \
+    --cmdline 'debug=0xc serial=3 cpus=8 keepsyms=1 -enable_kprintf_spam -noprogress rd=ufsroot0 unentitled_ios_sim_launch=1 ignition_level=1 wdt_test=no_user_checkin ufsrw=1 rootrw=1 launchd_unsecure_cache=1 wdt=-1 great_exynos_fb_noconsole=1 great_exynos_fb_hz=30'
 shim/build.sh ../shim/out/payload.bin      # -> shim/out/shim-boot.img
 ```
 
@@ -118,14 +118,17 @@ What the less obvious boot-args do:
 | Boot-arg | Effect |
 | --- | --- |
 | `rd=ufsroot0 ufsrw=1 rootrw=1` | Root on the `userdata` partition, writable |
-| `cpus=6` | Start the six A55 cores; `cpus=1` is the safe fallback |
+| `cpus=8` | Start the four M2s cores and four A53 cores; `cpus=1` is the safe fallback |
 | `launchd_unsecure_cache=1` | launchd accepts its job cache without AMFI |
 | `wdt=-1 wdt_test=no_user_checkin` | No hardware watchdog |
-| `sweetfb_noconsole=1` | Stop drawing kernel text over the GUI. It still goes to the persistent log; panics are drawn |
-| `sweetfb_hz=30` | Panel refresh rate of the CPU copy |
-| `sweettouch=0`, `sweetkeys=0` | Disable the touch or button driver |
+| `great_exynos_fb_noconsole=1` | Stop drawing kernel text over the GUI. It still goes to the persistent log; panics are drawn |
+| `great_exynos_fb_hz=30` | Panel refresh rate of the CPU copy |
+| `great_exynos_touch=0`, `great_exynos_keys=0` | Disable the touch or button driver |
 
-### 4. Flash the root and boot
+### 4. Flash the root and bootôt
+
+1. Boot into TWRP (or any custom recovery with adb root)
+2. Select `Install` -> `Install Image` -> `
 
 ```sh
 fastboot -S 512M flash userdata ios16-root.simg   # ~7 minutes; do not unplug
