@@ -131,7 +131,7 @@ What the less obvious boot-args do:
 3. Select `Wipe` -> `Advanced Wipe` -> select `Dalvik / ART Cache` `Cache` `System` `Data` `Internal Storage` `Preload` -> Swipe to Wipe
 4. Select `Reboot` -> `Recovery` -> Swipe to Reboot
 5. On Linux Terminal, type:
-```sh
+```
 adb exec-in 'dd of=/dev/block/platform/11120000.ufs/by-name/USERDATA bs=4M' < /path/to/ios16-root.img
 ```
 - ~7 minutes; do not unplug
@@ -139,6 +139,7 @@ adb exec-in 'dd of=/dev/block/platform/11120000.ufs/by-name/USERDATA bs=4M' < /p
 7. On Linux Terminal, type:
 ```
 adb exec-in 'dd of=/dev/block/platform/11120000.ufs/by-name/BOOT bs=4M' < /path/to/shim-boot.img
+```
 8. After flash, reboot the device
 
 The first boot takes about 4–5 minutes on the Apple logo, then the lock screen appears. Swipe up to unlock. To get back to custom recovery, hold Power + Volume up + Bixby.
