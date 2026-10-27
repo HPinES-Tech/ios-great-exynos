@@ -90,7 +90,6 @@ sudo fsck.hfsplus -fy ios16-root.img
 sudo mount -t hfsplus -o loop,force ios16-root.img /mnt/iosroot
 sudo python3 tools/sweet-root-tweaks.py /mnt/iosroot
 sudo umount /mnt/iosroot
-img2simg ios16-root.img ios16-root.simg
 ```
 
 `mkiosroot.sh` copies the OS volume and both cryptexes into one case-sensitive journaled HFS+ volume. It adds the dyld cache links, the plain system keybag and the log directories the daemons expect. `great-exynos-root-tweaks.py` applies the bring-up changes: it skips Setup, seeds the activation state, removes the baseband daemon, disables the watchdogs that kill slow apps and the crash-looping media paths, and so on. The script's header explains each change.
@@ -128,11 +127,19 @@ What the less obvious boot-args do:
 ### 4. Flash the root and boot
 
 1. Boot into TWRP (or any custom recovery with adb root)
-2. Select `Install` -> `Install Image` -> `/path/to/ios16-root.simg` -> `Data` -> `Swipe to Flash`
+2. Select `Wipe` -> `Format Data` -> type `yes` -> `enter` to Format -> `back`
+3. Select `Wipe` -> `Advanced Wipe` -> select `Dalvik / ART Cache` `Cache` `System` `Data` `Internal Storage` `Preload` -> Swipe to Wipe
+4. Select `Reboot` -> `Recovery` -> Swipe to Reboot
+5. On Linux Terminal, type:
+```sh
+adb exec-in 'dd of=/dev/block/platform/11120000.ufs/by-name/USERDATA bs=4M' < /path/to/ios16-root.img
+```
 - ~7 minutes; do not unplug
-3. After flash, reboot back to recovery
-4. Select `Install` -> `Install Image` -> `/path/to/shim-boot.img` -> `Boot` -> `Swipe to Flash`
-5. After flash, reboot the device
+6. After flash, reboot back to recovery
+7. On Linux Terminal, type:
+```
+adb exec-in 'dd of=/dev/block/platform/11120000.ufs/by-name/BOOT bs=4M' < /path/to/shim-boot.img
+8. After flash, reboot the device
 
 The first boot takes about 4–5 minutes on the Apple logo, then the lock screen appears. Swipe up to unlock. To get back to custom recovery, hold Power + Volume up + Bixby.
 
