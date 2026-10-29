@@ -56,8 +56,7 @@ There is no confirmed serial-console configuration yet. The kernel draws its con
 
 ## How to do it yourself
 
-You need a Samsung Galaxy Note8 (`greatlte`, `SM-N950F/FD/N`, S5E8895) with **OEM unlocked**, a Linux PC, and a GitHub account for the kernel build. This is the exact path used for the screenshots above; other variants or firmware may need changes. **Everything on `userdata` is lost.** Bootloaders, recovery, modem and persist partitions are never touched.
-
+You need a Samsung Galaxy Note8 (`greatlte`, `SM-N950F/FD/N`, S5E8895) with **OEM unlocked**, a Linux PC, and a GitHub account for the kernel build. This is the exact path used for the screenshots above; other variants or firmware may need changes. **Everything on `userdata` is lost.**
 ### 0. Back up the phone
 
 Flash TWRP (or any recovery with adb root) via odin, then boot and pull at least `boot`. That contain the device kernel (or just extract `boot.img` from the `phone's AP firmware` if you want to skip it). Keep them off git; `.gitignore` already excludes `backup/`, `dtb/` and `recovery/`.
@@ -65,7 +64,7 @@ Flash TWRP (or any recovery with adb root) via odin, then boot and pull at least
 The shim needs the stock DTB. Unpack your phone's stock `boot.img`:
 
 ```sh
-python3 tools/unpack_bootv2.py backup/boot.img dtb/boot_unpacked   # -> dtb/boot_unpacked/dtb
+python3 tools/unpack_boot_legacy.py backup/boot.img dtb/boot_unpacked   # -> dtb/boot_unpacked/dtb
 ```
 
 ### 1. Build the kernel
