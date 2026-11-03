@@ -11,13 +11,19 @@ This project ports Apple's open-source XNU kernel to the Samsung Galaxy Note8 (`
 # XNU Kernel Port
 |kernel|generation|status|branch|
 |:---:|:---:|:---:|:---:|
-|xnu-4570|iOS 11|unplanned||
-|xnu-4903|iOS 12|unplanned||
-|xnu-6153|iOS 13|unplanned||
-|xnu-7195|iOS 14|unplanned||
-|xnu-8020|iOS 15|unplanned||
-|xnu-8796|iOS 16|planned|[View](https://github.com/HPinES-Tech/ios-great-exynos/tree/xnu-8796)|
-|xnu-10063|iOS 17|unplanned||
-|xnu-11417|iOS 18|unplanned||
-|xnu-12377|iOS 26|unplanned||
-|xnu-13432|iOS 27|unplanned||
+|xnu-4570|iOS 11|Unplanned||
+|xnu-4903|iOS 12|Unplanned||
+|xnu-6153|iOS 13|Unplanned||
+|xnu-7195|iOS 14|Unplanned||
+|xnu-8020|iOS 15|Unplanned||
+|xnu-8796|iOS 16|Planned|[View](https://github.com/HPinES-Tech/ios-great-exynos/tree/xnu-8796)|
+|xnu-10063|iOS 17|Unplanned||
+|xnu-11417|iOS 18|Unplanned||
+|xnu-12377|iOS 26|Unplanned||
+|xnu-13432|iOS 27|Unplanned||
+
+Status definitions:
+- `Planned`: No source-code modifications have been made.
+- `Working-on`: Source-code modifications are in progress.
+- `Untested`: Implementation is complete but has not been verified.
+- `Completed`: Fully verified and usable.
