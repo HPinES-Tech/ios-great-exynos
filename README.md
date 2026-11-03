@@ -11,6 +11,10 @@ This project ports Apple's open-source XNU kernel to the Samsung Galaxy Note8 (`
 # XNU Kernel Port
 |kernel|generation|status|branch|
 |:---:|:---:|:---:|:---:|
+|xnu-4570|iOS 11|unplanned||
+|xnu-4903|iOS 12|unplanned||
+|xnu-6153|iOS 13|unplanned||
+|xnu-7195|iOS 14|unplanned||
 |xnu-8020|iOS 15|unplanned||
 |xnu-8796|iOS 16|planned|[View](https://github.com/HPinES-Tech/ios-great-exynos/tree/xnu-8796)|
 |xnu-10063|iOS 17|unplanned||
