@@ -9,6 +9,8 @@ This project ports Apple's open-source XNU kernel to the Samsung Galaxy Note8 (`
 > Experimental bring-up, not a usable phone OS. Many things are missing or stubbed (see below), and Apple's security model is mostly switched off. It installs into the `userdata` partition and so **erases Android's user data**.
 
 # XNU Kernel Port
-|kernel|version|status|branch|
+|kernel|generation|status|branch|
 |:---:|:---:|:---:|:---:|
-|xnu-8796|iOS 16|unusable|[View](https://github.com/HPinES-Tech/ios-great-exynos/tree/xnu-8796)|
+|xnu-8796|iOS 16|planned|[View](https://github.com/HPinES-Tech/ios-great-exynos/tree/xnu-8796)|
+|xnu-10063|iOS 17|unpanned||
+|xnu-11215|iOS 18|unplanned||
