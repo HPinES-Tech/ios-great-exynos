@@ -1,4 +1,4 @@
-# PROJECT IS UNUSABLE !
+# PROJECT IS UNUSABLE!
 ***Wait until this text is removed.***
 
 # xnu-8796 (iOS 16 generation)
@@ -18,10 +18,10 @@ As of **right now** the phone boots to the **iOS home screen**. You can unlock i
 | Memory | About 3.95 GiB of the upper DDR bank |
 | Storage | Own UFS host driver; the iOS root is a journaled HFS+ volume in `userdata`, read/write |
 | iOS userland | Real iPhone X 16.7.16 root filesystem and shared cache; launchd and the system daemons run |
-| Display | Kernel IOSurface + IOMobileFramebuffer (`AppleCLCD`) services; CoreAnimation renders in software; frames are copied into the bootloader's framebuffer. Presented to iOS as an iPhone X panel (1125×2436 canvas scaled on the 1440×2960 panel) |
+| Display | Kernel IOSurface + IOMobileFramebuffer (`AppleCLCD`) services; CoreAnimation renders in software; frames are copied into the bootloader's framebuffer. Presented to iOS as an iPhone X panel (1125x2436 canvas centered on the 1440×2960 panel) |
 | GUI | backboardd, SpringBoard, lock screen, home screen, Control Center, notification center, Settings |
 | Touch | Samsung S6SY661 over HSI2C (High-Speed I2C) of Exynos, rail enabled through PMIC/regulator, delivered as HID digitizer events |
-| Buttons | Power, volume up/down/Bixby via Exynos GPIOs and Samsung PMIC as HID consumer keys; lock/wake works |
+| Buttons | Power, volume up/down, Bixby via Exynos GPIOs and Samsung PMIC as HID consumer keys; lock/wake works |
 | Battery | IOPMPowerSource service (static 100 %, charging icon; real fuel-gauge readout prepared) |
 | Device identity | iPhone X (`iPhone10,3` / `D22AP`): no Home button, gesture UI |
 | Activation | Native "Hactivation" path of mobileactivationd, chosen through device-tree security status. No Apple servers involved |
@@ -30,9 +30,9 @@ As of **right now** the phone boots to the **iOS home screen**. You can unlock i
 
 - **Navigation:** you cannot leave an app (the home gesture and AssistiveTouch Home do nothing yet).
 - **No Wi-Fi, Bluetooth, cellular, audio, camera, sensors, GPS or SEP / Face ID.** Daemons for them start and fail or keep relaunching.
-- **No GPU.** Everything is drawn by the CPU at roughly <60 fps.
+- **No GPU.** Everything is drawn by the CPU at roughly <30 fps.
 - **Few apps.** The image has only what is on the system volume. There is no App Store, no Apple ID, and some Settings pages are empty.
-- **Slow boot:** about 4 minutes on the Apple logo.
+- **Slow boot:** about a few minutes on the Apple logo.
 - **Security is off:** permissive code signing (AMFI) and sandbox policies, a stub AppleKeyStore, no data protection. Do not put anything personal on it.
 
 ## How it boots
