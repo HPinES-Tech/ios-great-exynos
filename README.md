@@ -5,7 +5,7 @@
 
 **Apple's iOS 16 running on a Samsung Galaxy Note8.**
 
-`fork of dipa-studio/ios-sweet`
+`Fork of` [`dipa-studio/ios-sweet`](https://github.com/dipa-studio/ios-sweet/)
 
 This branch have a port of Apple's open-source XNU kernel (xnu-8796, the iOS 16 generation) for the Samsung Galaxy Note8 (`greatlte`, Samsung S5E8895 / Exynos 8895). On top of it runs the **unmodified iOS 16.7.16 (20H392) userland of the iPhone X**: launchd, the system daemons, backboardd, SpringBoard and the stock apps.
 
@@ -60,7 +60,7 @@ Flash TWRP (or any recovery with adb root) via odin, then boot and pull at least
 The shim needs the stock DTB. Unpack your phone's stock `boot.img`:
 
 ```sh
-python3 tools/unpack_boot_legacy.py backup/boot.img dtb/boot_unpacked   # -> dtb/boot_unpacked/dtb
+python3 tools/unpack_bootv0.py backup/boot.img dtb/boot_unpacked   # -> dtb/boot_unpacked/dtb
 ```
 
 ### 1. Build the kernel
@@ -68,7 +68,7 @@ python3 tools/unpack_boot_legacy.py backup/boot.img dtb/boot_unpacked   # -> dtb
 The kernel builds on GitHub's macOS runners with [blacktop/darwin-xnu-build](https://github.com/blacktop/darwin-xnu-build). The workflow fetches xnu-8796, applies `xnu/patches/` in order, and also stages the pinned open-source libpthread, HFS and BearSSL sources it needs. Fork the repo (public repos get free macOS minutes) and run:
 
 ```sh
-gh workflow run xnu.yml -R YOU/ios-great-exynos
+gh workflow run xnu.yml -R YOU/ios-great-exynos --ref xnu-8796
 gh run download RUN_ID -R YOU/ios-great-exynos -n xnu-kernel -D xnu/out
 ```
 
@@ -83,11 +83,11 @@ Download the iPhone X (iPhone10,3) iOS 16.7.16 (20H392) IPSW from Apple. Then, o
 tools/mkiosroot.sh OS.dmg SystemOS.dmg AppOS.dmg ios16-root.img 16G
 sudo fsck.hfsplus -fy ios16-root.img
 sudo mount -t hfsplus -o loop,force ios16-root.img /mnt/iosroot
-sudo python3 tools/great-exynos-root-tweaks.py /mnt/iosroot
+sudo python3 tools/greatlte-root-tweaks.py /mnt/iosroot
 sudo umount /mnt/iosroot
 ```
 
-`mkiosroot.sh` copies the OS volume and both cryptexes into one case-sensitive journaled HFS+ volume. It adds the dyld cache links, the plain system keybag and the log directories the daemons expect. `great-exynos-root-tweaks.py` applies the bring-up changes: it skips Setup, seeds the activation state, removes the baseband daemon, disables the watchdogs that kill slow apps and the crash-looping media paths, and so on. The script's header explains each change.
+`mkiosroot.sh` copies the OS volume and both cryptexes into one case-sensitive journaled HFS+ volume. It adds the dyld cache links, the plain system keybag and the log directories the daemons expect. `greatlte-root-tweaks.py` applies the bring-up changes: it skips Setup, seeds the activation state, removes the baseband daemon, disables the watchdogs that kill slow apps and the crash-looping media paths, and so on. The script's header explains each change.
 
 The device tree builder copies `/product` from the real iPhone X device tree, which MobileGestalt needs. Extract it once, without downloading the whole IPSW:
 
@@ -101,9 +101,9 @@ ipsw img4 im4p extract research/ipsw-x/dt/Firmware/all_flash/DeviceTree.d22ap.im
 Needs `aarch64-linux-gnu-gcc` and `mkbootimg`.
 
 ```sh
-python3 tools/mkadt.py shim/out/great-exynos.adt --highmem
-python3 tools/mkpayload.py xnu/out/kernel.development.great-exynos shim/out/great-exynos.adt shim/out/payload.bin \
-    --cmdline 'debug=0xc serial=3 cpus=8 keepsyms=1 -enable_kprintf_spam -noprogress rd=ufsroot0 unentitled_ios_sim_launch=1 ignition_level=1 wdt_test=no_user_checkin ufsrw=1 rootrw=1 launchd_unsecure_cache=1 wdt=-1 great_exynos_fb_noconsole=1 great_exynos_fb_hz=30'
+python3 tools/mkadt.py shim/out/greatlte.adt
+python3 tools/mkpayload.py xnu/out/kernel.development.greatlte shim/out/greatlte.adt shim/out/payload.bin \
+    --cmdline 'debug=0xc serial=3 cpus=8 keepsyms=1 -enable_kprintf_spam -noprogress rd=ufsroot0 unentitled_ios_sim_launch=1 ignition_level=1 wdt_test=no_user_checkin ufsrw=1 rootrw=1 launchd_unsecure_cache=1 wdt=-1 greatlte_fb_noconsole=1 greatlte_fb_hz=30'
 shim/build.sh ../shim/out/payload.bin      # -> shim/out/shim-boot.img
 ```
 
@@ -115,15 +115,15 @@ What the less obvious boot-args do:
 | `cpus=8` | Start the four M2s cores and four A53 cores; `cpus=1` is the safe fallback |
 | `launchd_unsecure_cache=1` | launchd accepts its job cache without AMFI |
 | `wdt=-1 wdt_test=no_user_checkin` | No hardware watchdog |
-| `great_exynos_fb_noconsole=1` | Stop drawing kernel text over the GUI. It still goes to the persistent log; panics are drawn |
-| `great_exynos_fb_hz=30` | Panel refresh rate of the CPU copy |
-| `great_exynos_touch=0`, `great_exynos_keys=0` | Disable the touch or button driver |
+| `greatlte_fb_noconsole=1` | Stop drawing kernel text over the GUI. It still goes to the persistent log; panics are drawn |
+| `greatlte_fb_hz=30` | Panel refresh rate of the CPU copy |
+| `greatlte_touch=0`, `greatlte_keys=0` | Disable the touch or button driver |
 
 ### 4. Flash the root and boot
 
 1. Boot into TWRP (or any custom recovery with adb root)
-2. Select `Wipe` -> `Format Data` -> type `yes` -> `enter` to Format -> `back`
-3. Select `Wipe` -> `Advanced Wipe` -> select `Dalvik / ART Cache` `Cache` `System` `Data` `Internal Storage` `Preload` -> Swipe to Wipe
+2. Select `Wipe` -> `Format Data` -> type `yes` -> `enter` to Format -> home
+3. Select `Wipe` -> `Advanced Wipe` -> select `Dalvik / ART Cache` `Cache` `System` `Data` `Internal Storage` `Preload` -> Swipe to Wipe -> home
 4. Select `Reboot` -> `Recovery` -> Swipe to Reboot
 5. On Linux Terminal, type:
 ```
@@ -137,34 +137,32 @@ adb exec-in 'dd of=/dev/block/platform/11120000.ufs/by-name/BOOT bs=4M' < /path/
 ```
 8. After flash, reboot the device
 
-The first boot takes about 4–5 minutes on the Apple logo, then the lock screen appears. Swipe up to unlock. To get back to custom recovery, hold Power + Volume up + Bixby.
+The first boot takes about a few minutes on the Apple logo, then the lock screen appears. Swipe up to unlock. To get back to custom recovery, hold Power + Volume up + Bixby.
 
 ### 5. Read the kernel log
 
 ```sh
-fastboot boot recovery/recovery.img        # OrangeFox, temporary
-tools/great-exynos-log-pull.sh logs/boot.txt      # 4 MiB console ring from the end of userdata
-adb reboot bootloader
+boot twrp (or any recovery with adb root)
+tools/greatlte-log-pull.sh logs/boot.txt      # 4 MiB console ring from the end of userdata
 ```
 
-The log contains crash reports with backtraces (`CRASH name ...`), IOKit traces of backboardd and SpringBoard, and the drivers' `GREATLTE ...` lines. `tools/great-exynos-crash.py` symbolicates them against the shared cache.
+The log contains crash reports with backtraces (`CRASH name ...`), IOKit traces of backboardd and SpringBoard, and the drivers' `GREATLTE ...` lines. `tools/greatlte-crash.py` symbolicates them against the shared cache.
 
 ## Repository layout
 
 | Path | What |
 | --- | --- |
-| `shim/` | Bare-metal boot shim (C + asm) packed as an Android boot.img v2 |
+| `shim/` | Bare-metal boot shim (C + asm) packed as an Android boot.img v0 |
 | `xnu/patches/` | The XNU patch series (applied in order by CI), plus staging scripts for libpthread, HFS and BearSSL |
 | `.github/workflows/xnu.yml` | Kernel CI build |
 | `tools/mkadt.py` | Generates the Apple Device Tree from greatlte's MMIO layout and the iPhone X identity |
 | `tools/mkpayload.py` | Packs kernel + ADT + boot-args into the shim payload |
 | `tools/mkiosroot.sh` | Builds the HFS+ iOS root from the IPSW images |
-| `tools/great-exynos-root-tweaks.py` | Bring-up changes to the root (Setup skip, activation, daemons) |
-| `tools/great-exynos-log-pull.sh`, `great-exynos-log.py` | Read the persistent kernel log from recovery |
-| `tools/great-exynos-crash.py` | Symbolicate console crash reports |
+| `tools/greatlte-root-tweaks.py` | Bring-up changes to the root (Setup skip, activation, daemons) |
+| `tools/greatlte-log-pull.sh`, `greatlte-log.py` | Read the persistent kernel log from recovery |
+| `tools/greatlte-crash.py` | Symbolicate console crash reports |
 | `tools/xnu-cc.py` | Local single-file compile check from a CI log |
-| `tools/adt.py`, `remotezip.py`, `unpack_bootv2.py`, `sparsediff.py` | Helpers |
-| `NOTES.md` | Detailed engineering log: every boot, crash and decision, plus hardware facts |
+| `tools/adt.py`, `remotezip.py`, `unpack_bootv0.py`, `sparsediff.py` | Helpers |
 
 Not in git: partition backups, live device trees, recovery images, Apple firmware and root images, and downloaded or generated build trees. They contain device serials and calibration data, or Apple's copyrighted files.
 
@@ -183,27 +181,25 @@ Not in git: partition backups, live device trees, recovery images, Apple firmwar
 | 0056–0057 | Throttled panel copy; no external identity resolver |
 | 0058 | HID event services. Apple's IOHIDFamily-1915.140.3 user client and event queue, matching the iOS 16.7 userland |
 | 0059 | iPhone X identity (`hw.product` / `hw.target` from the device tree) |
-| 0060 | Power and volume keys over SPMI; touch over GENI I²C |
+| 0060 | Power, volume and Bixby keys over GPIOs/PMIC; touch over HSI2C |
 | 0061 | Present the display as 1125×2436 |
-| 0062 | RPMh regulator vote for the touch rail; battery power source |
-| 0063 | GENI FIFO packing fix and the Goodix GT9896 protocol |
+| 0062 | PMIC/regulator vote for the touch rail; battery power source |
+| 0063 | HSI2C packing fix and the Samsung S6SY661 protocol |
 | 0064 | Grant PRIV_WORK_INTERVAL (UIKit's CoreAnimation work interval) |
-| 0065 | SMP: secondary A55 cores via PSCI CPU_ON |
+| 0065 | SMP: secondary A53 cores via PSCI CPU_ON |
 | 0066–0067 | Fault-region crash info; console mute |
 | 0068 | IOSurface lookup semantics for already-mapped surfaces |
 | 0069 | Batched persistent-log flushes |
 
 ## Key hardware facts
 
-- RAM: payloads use the upper bank, `0x100000000` + `0xfcc00000` (about 3.95 GiB), above Qualcomm's protected carve-outs.
+- RAM: payloads use the upper bank
 - GICv3 with security extensions: the timer goes through Group 1 IRQ (virtual timer INTID 19), not FIQ as on Apple silicon.
 - PSCI through `smc`, 19.2 MHz timer, ARMv8.2 without pointer authentication. MPIDR uses Aff1 for the core number.
-- Panel: 1080×2400 DSC video mode, continuous splash from ABL, no refresh kick needed.
-- Touch: Goodix GT9896 at I²C `0x5d` on QUP SE7 (`0xa84000`), powered by PM6150L LDO11 through RPMh.
-- Buttons: power and volume down on the PM6150 PON block, volume up on PM6150L GPIO2 (SPMI SID 4).
-
-More in [`NOTES.md`](NOTES.md).
+- Panel: 1440×2960 DSC video mode, continuous splash from SBOOT (Samsung Bootloader), no refresh kick needed.
+- Touch: Samsung S6SY661 at HSI2C through PMIC/regulator.
+- Buttons: power, volume up/down and bixby delivered as HID consumer keys.
 
 ## Credits
 
-Built on Apple's open-source releases (xnu, IOHIDFamily, libpthread, hfs), [BearSSL](https://bearssl.org), [blacktop/darwin-xnu-build](https://github.com/blacktop/darwin-xnu-build), [ipsw](https://github.com/blacktop/ipsw), Qualcomm/Xiaomi's published Linux kernel sources for the hardware details, and [OrangeFox Recovery](https://orangefox.download). iOS itself is Apple's and is not distributed here.
+Built on Apple's open-source releases (xnu, IOHIDFamily, libpthread, hfs), [BearSSL](https://bearssl.org), [blacktop/darwin-xnu-build](https://github.com/blacktop/darwin-xnu-build), [ipsw](https://github.com/blacktop/ipsw), Samsung's published Linux kernel sources for the hardware details, and [TWRP Recovery](https:/twrp.com). iOS itself is Apple's and is not distributed here.
