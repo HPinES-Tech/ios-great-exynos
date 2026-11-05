@@ -1,4 +1,8 @@
 # PROJECT IS UNUSABLE!
+***The information below is placeholder content.***
+
+***Do not treat it as a description of the current project status.***
+
 ***Wait until this text is removed.***
 
 # xnu-8796 (iOS 16 generation)
