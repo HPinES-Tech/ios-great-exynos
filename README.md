@@ -15,7 +15,7 @@ As of **right now** the phone boots to the **iOS home screen**. You can unlock i
 
 | Area | State |
 | --- | --- |
-| Boot | Flashed Shim Image -> XNU. A custom boot image is flashed to the boot partition |
+| Boot | Stock Samsung Bootloader -> Flashed Shim Image -> XNU. A custom boot image is flashed to the boot partition |
 | CPU | 8 of the 8 cores (the four Exynos M2s and four Cortex-A53) via PSCI, 16K pages, GICv3 interrupts, timers |
 | Memory | About 3.95 GiB of the upper DDR bank |
 | Storage | Own UFS host driver; the iOS root is a journaled HFS+ volume in `userdata`, read/write |
