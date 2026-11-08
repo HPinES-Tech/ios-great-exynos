@@ -44,7 +44,7 @@ As of **right now** the phone boots to the **iOS home screen**. You can unlock i
 ## How it boots
 
 ```
-SBOOT (stock Samsung bootloader, OEM unlocked)
+S-BOOT (stock Samsung bootloader, OEM unlocked)
   -> Flashed Shim Image
      -> shim: own MMU setup, reads the live FDT, loads the payload from the ramdisk
         -> XNU Mach-O + generated Apple Device Tree (ADT) + boot-args
@@ -186,7 +186,7 @@ Not in git: partition backups, live device trees, recovery images, Apple firmwar
 | 0058 | HID event services. Apple's IOHIDFamily-1915.140.3 user client and event queue, matching the iOS 16.7 userland |
 | 0059 | iPhone X identity (`hw.product` / `hw.target` from the device tree) |
 | 0060 | Power, volume and Bixby keys over GPIOs/PMIC; touch over HSI2C |
-| 0061 | Present the display as 1125×2436 |
+| 0061 | Present the display as 1125×2436 centered on 1440x2960 panel |
 | 0062 | PMIC/regulator vote for the touch rail; battery power source |
 | 0063 | HSI2C packing fix and the Samsung S6SY661 protocol |
 | 0064 | Grant PRIV_WORK_INTERVAL (UIKit's CoreAnimation work interval) |
