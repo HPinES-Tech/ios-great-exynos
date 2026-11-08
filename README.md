@@ -1,4 +1,4 @@
-# iOS Great Exynos Project
+# Project iOS Great Exynos
 
 **Apple's iOS running on a Samsung Galaxy Note8.**
 
