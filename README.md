@@ -206,4 +206,4 @@ Not in git: partition backups, live device trees, recovery images, Apple firmwar
 
 ## Credits
 
-Built on Apple's open-source releases (xnu, IOHIDFamily, libpthread, hfs), [BearSSL](https://bearssl.org), [blacktop/darwin-xnu-build](https://github.com/blacktop/darwin-xnu-build), [ipsw](https://github.com/blacktop/ipsw), Samsung's published Linux kernel sources for the hardware details, and [TWRP Recovery](https:/twrp.com). iOS itself is Apple's and is not distributed here.
+Built on Apple's open-source releases (xnu, IOHIDFamily, libpthread, hfs), [BearSSL](https://bearssl.org), [blacktop/darwin-xnu-build](https://github.com/blacktop/darwin-xnu-build), [ipsw](https://github.com/blacktop/ipsw), Samsung's published Linux kernel sources for the hardware details, and [TWRP Recovery](https://twrp.me). iOS itself is Apple's and is not distributed here.
