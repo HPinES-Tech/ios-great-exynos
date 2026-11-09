@@ -24,7 +24,7 @@ As of **right now** the phone boots to the **iOS home screen**. You can unlock i
 | Memory | About 3.95 GiB of the upper DDR bank |
 | Storage | Own UFS host driver; the iOS root is a journaled HFS+ volume in `userdata`, read/write |
 | iOS userland | Real iPhone X 16.7.16 root filesystem and shared cache; launchd and the system daemons run |
-| Display | Kernel IOSurface + IOMobileFramebuffer (`AppleCLCD`) services; CoreAnimation renders in software; frames are copied into the bootloader's framebuffer. Presented to iOS as an iPhone X panel (1125x2436 canvas centered on the 1440×2960 panel) |
+| Display | Kernel IOSurface + IOMobileFramebuffer (`AppleCLCD`) services; CoreAnimation renders in software; frames are copied into the bootloader's framebuffer. Presented to iOS as a device's real panel resolution (1440×2960) |
 | GUI | backboardd, SpringBoard, lock screen, home screen, Control Center, notification center, Settings |
 | Touch | Samsung S6SY661 over HSI2C (High-Speed I2C) of Exynos, rail enabled through PMIC/regulator, delivered as HID digitizer events |
 | Buttons | Power, volume up/down, Bixby via Exynos GPIOs and Samsung PMIC as HID consumer keys; lock/wake works |
@@ -59,7 +59,7 @@ There is no confirmed serial-console configuration yet. The kernel draws its con
 You need a Samsung Galaxy Note8 (`greatlte`, `SM-N950F/FD/N`, S5E8895) with **OEM unlocked**, a Linux PC, and a GitHub account for the kernel build. This is the exact path used for the screenshots above; other variants or firmware may need changes. **Everything on `userdata` is lost.**
 ### 0. Back up the phone
 
-Flash TWRP (or any recovery with adb root) via odin, then boot and pull at least `boot`. That contain the device kernel (or just extract `boot.img` from the `phone's AP firmware` if you want to skip it). Keep them off git; `.gitignore` already excludes `backup/`, `dtb/` and `recovery/`.
+Flash TWRP (or any recovery with adb root) via odin, then boot and pull at least `BOOT`, `RECOVERY`, `EFS`, `RADIO`, `PARAM` in `/dev/block/platform/soc/11120000.ufs/by-name/`. They contain per-device calibration data. Keep them off git; `.gitignore` already excludes `backup/`, `dtb/` and `recovery/`.
 
 The shim needs the stock DTB. Unpack your phone's stock `boot.img`:
 
